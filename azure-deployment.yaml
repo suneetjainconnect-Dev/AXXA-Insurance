@@ -1,0 +1,52 @@
+# Azure Container Apps Deployment Configuration
+# Free tier eligible
+
+apiVersion: apps.azure.com/v1beta1
+kind: ContainerApp
+metadata:
+  name: axxa-insurance
+  properties:
+    template:
+      containers:
+        - image: python:3.12-slim
+          name: axxa-insurance
+          command:
+            - bash
+            - -c
+            - |
+              apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+              pip install --no-cache-dir -r requirements.txt
+              python manage.py migrate --noinput
+              gunicorn --bind 0.0.0.0:8000 axxa_insurance.wsgi:application
+          resources:
+            cpu: 0.25
+            memory: 0.5Gi
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: axxa_insurance.settings
+            - name: DEBUG
+              value: "False"
+            - name: ALLOWED_HOSTS
+              value: "*"
+            - name: SECRET_KEY
+              valueFrom:
+                secretRef: django-secret-key
+            - name: DATABASE_URL
+              value: sqlite:///db.sqlite3
+      scale:
+        minReplicas: 0
+        maxReplicas: 10
+        rules:
+          - name: http-rule
+            http:
+              threshold: 100
+              period: 60
+    configuration:
+      activeRevisionsMode: single
+      ingress:
+        external: true
+        targetPort: 8000
+        transport: http
+      registries: []
+      dapr:
+        enabled: false
