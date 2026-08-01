@@ -145,6 +145,38 @@ Project4/
 4. **Admin Interface**: Complete administrative control
 5. **Custom Templates**: Professional insurance-focused UI
 
+## API Endpoints (FastAPI)
+
+The application exposes the following REST API endpoints at `http://localhost:8001`:
+
+### Authentication
+- `POST /api/login` - Login with username and password
+- `POST /api/register` - Register a new user
+
+### Customers
+- `GET /api/customers/me` - Get current customer profile
+- `PUT /api/customers/me` - Update customer profile
+
+### Policies
+- `GET /api/policies` - List all policies
+- `GET /api/policies/{policy_id}` - Get policy details
+- `POST /api/policies` - Create a new policy
+
+### Claims
+- `GET /api/claims` - List all claims
+- `GET /api/claims/{claim_id}` - Get claim details
+- `POST /api/policies/{policy_id}/claims` - Create a new claim
+- `PUT /api/claims/{claim_id}` - Update claim status
+
+### Notifications
+- `GET /api/notifications` - List all notifications
+- `PUT /api/notifications/{notif_id}/read` - Mark notification as read
+
+### Calculator
+- `GET /api/calculate-premium?policy_type=&coverage_amount=&age=` - Calculate estimated premium
+
+**Authentication:** Use Basic Auth with username and password.
+
 ## Deployment
 
 ### Environment Variables
