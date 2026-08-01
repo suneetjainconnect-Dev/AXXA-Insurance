@@ -1,0 +1,65 @@
+{% extends 'insurance/base.html' %}
+
+{% block title %}AXXA Insurance - Secure Your Future{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to AXXA Insurance</h1>
+        <p>Your trusted partner for comprehensive insurance solutions</p>
+        <a href="{% url 'insurance:policy_catalog' %}" class="btn btn-primary">Explore Policies</a>
+        <a href="{% url 'insurance:premium_calculator' %}" class="btn btn-secondary">Calculate Premium</a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <h2>Why Choose AXXA Insurance?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Comprehensive Coverage</h3>
+                <p>We offer a wide range of insurance products to meet your needs</p>
+            </div>
+            <div class="feature-card">
+                <h3>Quick Claims</h3>
+                <p>Fast and efficient claims processing with minimal documentation</p>
+            </div>
+            <div class="feature-card">
+                <h3>24/7 Support</h3>
+                <p>Our team is available round the clock to assist you</p>
+            </div>
+            <div class="feature-card">
+                <h3>Customized Plans</h3>
+                <p>Tailored insurance solutions based on your requirements</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Types Section -->
+<section class="types-section">
+    <div class="container">
+        <h2>Our Insurance Products</h2>
+        <div class="types-grid">
+            <a href="{% url 'insurance:policy_catalog' %}" class="type-card">
+                <h3>Health Insurance</h3>
+                <p>Comprehensive health coverage</p>
+            </a>
+            <a href="{% url 'insurance:policy_catalog' %}" class="type-card">
+                <h3>Life Insurance</h3>
+                <p>Financial security for your family</p>
+            </a>
+            <a href="{% url 'insurance:policy_catalog' %}" class="type-card">
+                <h3>Motor Insurance</h3>
+                <p>Protection for your vehicle</p>
+            </a>
+            <a href="{% url 'insurance:policy_catalog' %}" class="type-card">
+                <h3>Home Insurance</h3>
+                <p>Secure your home and belongings</p>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

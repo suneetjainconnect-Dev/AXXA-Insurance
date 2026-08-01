@@ -1,0 +1,87 @@
+{% extends 'insurance/base.html' %}
+
+{% block title %}AXXA Insurance - Claim Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-file-medical"></i> Claim Details</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="text-primary">{{ claim.claim_number }}</h4>
+                            <p><strong>Policy:</strong> <a href="{% url 'insurance:policy_detail' claim.policy.pk %}">{{ claim.policy.policy_number }}</a></p>
+                            <p><strong>Type:</strong> {{ claim.get_claim_type_display }}</p>
+                            <p><strong>Description:</strong></p>
+                            <div class="alert alert-info">{{ claim.description }}</div>
+                            <p><strong>Incident Date:</strong> {{ claim.incident_date }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-primary">Financial Summary</h4>
+                            <p><strong>Claim Amount:</strong> ${{ claim.claim_amount }}</p>
+                            <p><strong>Processed Amount:</strong> ${{ claim.processed_amount }}</p>
+                            <p><strong>Pending Amount:</strong> <strong class="text-danger">${{ claim.pending_amount }}</strong></p>
+                            <p><strong>Status:</strong> 
+                                {% if claim.status == 'approved' %}
+                                <span class="status-badge status-active">{{ claim.get_status_display }}</span>
+                                {% elif claim.status == 'submitted' %}
+                                <span class="status-badge status-pending">{{ claim.get_status_display }}</span>
+                                {% elif claim.status == 'denied' %}
+                                <span class="status-badge status-rejected">{{ claim.get_status_display }}</span>
+                                {% else %}
+                                <span class="status-badge">{{ claim.get_status_display }}</span>
+                                {% endif %}
+                            </p>
+                            {% if claim.status == 'denied' and claim.rejection_reason %}
+                            <div class="alert alert-danger">
+                                <strong>Rejection Reason:</strong> {{ claim.rejection_reason }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <h5 class="text-primary">Claim Documents</h5>
+                            {% if claim.documents.all %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Document</th>
+                                            <th>Uploaded</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for doc in claim.documents.all %}
+                                        <tr>
+                                            <td>{{ doc.document_type }}</td>
+                                            <td>{{ doc.uploaded_at }}</td>
+                                            <td>
+                                                <a href="{{ doc.file.url }}" class="btn btn-sm btn-outline-primary" download>Download</a>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr><td colspan="3" class="text-center">No documents uploaded</td></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p>No documents uploaded for this claim.</p>
+                            {% endif %}
+                            
+                            <a href="{% url 'insurance:upload_document' claim.pk %}" class="btn btn-primary mt-3">Upload Documents</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'insurance/base.html' %}
+
+{% block title %}AXXA Insurance - Premium Calculator{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-calculator"></i> Premium Calculator</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Estimate your insurance premium instantly!</p>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="policy_type" class="form-label">Insurance Type</label>
+                            <select class="form-select" id="policy_type" name="policy_type" required>
+                                <option value="">Select Policy Type</option>
+                                <option value="health">Health Insurance</option>
+                                <option value="life">Life Insurance</option>
+                                <option value="motor">Motor/Car Insurance</option>
+                                <option value="home">Home Insurance</option>
+                                <option value="travel">Travel Insurance</option>
+                                <option value="business">Business Insurance</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="coverage_amount" class="form-label">Coverage Amount ($)</label>
+                            <input type="number" class="form-control" id="coverage_amount" name="coverage_amount" min="1000" step="1000" placeholder="Enter coverage amount">
+                            <div class="form-text">Example: 500000 for $500,000</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="age" name="age" min="1" max="120" placeholder="Enter your age">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Calculate Premium</button>
+                    </form>
+                    
+                    {% if premium %}
+                    <div class="alert alert-success mt-4">
+                        <h4 class="mb-3"><i class="fas fa-check-circle"></i> Estimated Premium</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Policy Type:</strong> {{ policy_type|title }}</p>
+                                <p class="mb-1"><strong>Coverage Amount:</strong> ${{ coverage_amount|floatformat:"0",js_string="no" }}</p>
+                                <p class="mb-0"><strong>Estimated Premium (Annual):</strong></p>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <h2 class="display-5 fw-bold text-success">${{ premium|floatformat:"0",js_string="no" }}</h2>
+                                <p class="mb-0">per year</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i> This is an estimated premium. Final rates may vary based on your profile and underwriting.
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

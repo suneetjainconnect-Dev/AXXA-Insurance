@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-lg">
+            <div class="card-body p-5 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-award fa-5x {% if passed %}text-success{% else %}text-warning{% endif %}"></i>
+                </div>
+
+                <h2 class="mb-3">Quiz Complete!</h2>
+                <p class="lead mb-4">Your certification results are in:</p>
+
+                <div class="row justify-content-center mb-5">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h5 class="card-title">Your Score</h5>
+                                <div class="display-4 fw-bold {% if passed %}text-success{% else %}text-warning{% endif %}">
+                                    {{ score }}/{{ total }}
+                                </div>
+                                <p class="mb-0">
+                                    {{ (score * 100 / total)|int }}% Correct
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert {% if passed %}alert-success{% else %}alert-warning{% endif %}">
+                    {% if passed %}
+                    <h4 class="alert-heading">Congratulations! You Passed!</h4>
+                    <p>You have successfully completed the GenAI & Agentic AI Certification exam. Your certificate is ready for download.</p>
+                    <hr>
+                    <p class="mb-0">Your certification has been recorded and is available for download.</p>
+                    {% else %}
+                    <h4 class="alert-heading">Keep Learning!</h4>
+                    <p>You scored {{ (score * 100 / total)|int }}%. To earn your certification, you need to score at least 60% (9/15 questions).</p>
+                    <hr>
+                    <p class="mb-0">Review the topics and try again to earn your certification.</p>
+                    {% endif %}
+                </div>
+
+                {% if passed and certificate %}
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <a href="#certificate-preview" class="btn btn-lg btn-success w-100 mb-3" data-bs-toggle="modal" data-bs-target="#certificateModal">
+                            <i class="fas fa-certificate me-2"></i> View Certificate Preview
+                        </a>
+                        <a onclick="window.print()" class="btn btn-primary w-100 mb-3">
+                            <i class="fas fa-print me-2"></i> Print Certificate
+                        </a>
+                        <button class="btn btn-outline-primary w-100" onclick="copyLinkedInText()">
+                            <i class="fas fa-copy me-2"></i> Copy LinkedIn Post
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+                    <a href="{{ url_for('start_quiz') }}" class="btn btn-primary">Retake Quiz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Certificate Modal -->
+<div class="modal fade" id="certificateModal" tabindex="-1" aria-labelledby="certificateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="certificateModalLabel">Your Certification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="certificate-preview">
+                {% include 'certificate_preview.html' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="#certificate-preview" onclick="window.print()" class="btn btn-primary">
+                    <i class="fas fa-print me-2"></i> Print Certificate
+                </a>
+                <a href="{{ url_for('download_certificate', cert_id=certificate['id']) }}" class="btn btn-success">
+                    <i class="fas fa-download me-2"></i> Download as PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyLinkedInText() {
+    const text = `✔ Certified: GenAI & Agentic AI Professional
+
+Score: {{ certificate['score'] }}/{{ certificate['total_questions'] }} ({{ (certificate['score'] * 100 / certificate['total_questions'])|int }}%)
+
+Certificate ID: {{ certificate['certificate_number'] }}
+
+Issue Date: {{ certificate['passed_at'][:10] }}
+
+Earned on CertifyAI-Pro platform`;
+    
+    navigator.clipboard.writeText(text).then(() => {
+        alert('LinkedIn post text copied to clipboard!');
+    });
+}
+</script>
+{% endblock %}

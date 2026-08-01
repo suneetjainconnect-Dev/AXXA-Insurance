@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Setup Project Structure",
+  "description": "Create project directory structure for GenAI certification platform",
+  "version": "1",
+  "when": {
+    "type": "userTriggered"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": ""
+  }
+}

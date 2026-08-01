@@ -1,0 +1,144 @@
+{% extends 'insurance/base.html' %}
+
+{% block title %}AXXA Insurance - Customer Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="sidebar">
+                <h4>Dashboard Menu</h4>
+                <ul>
+                    <li><a href="{% url 'insurance:dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Overview</a></li>
+                    <li><a href="{% url 'insurance:policies' %}" class="{% if request.resolver_match.url_name == 'policy_list' %}active{% endif %}">My Policies</a></li>
+                    <li><a href="{% url 'insurance:claims' %}" class="{% if request.resolver_match.url_name == 'claim_list' %}active{% endif %}">My Claims</a></li>
+                    <li><a href="{% url 'insurance:profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active{% endif %}">Profile Settings</a></li>
+                    <li><a href="{% url 'insurance:premium_calculator' %}">Premium Calculator</a></li>
+                </ul>
+            </div>
+            
+            {% if notifications %}
+            <div class="sidebar mt-3">
+                <h4>Notifications <span class="badge bg-danger">{{ notifications|length }}</span></h4>
+                <ul class="list-unstyled">
+                    {% for notification in notifications %}
+                    <li>
+                        <a href="{% url 'insurance:mark_notification_read' notification.pk %}">
+                            <small>{{ notification.title }}</small>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-tachometer-alt"></i> Customer Dashboard</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="text-primary">Welcome, {{ user.first_name }}!</h4>
+                    <p>Here's a summary of your insurance profile.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <div class="card bg-primary text-white text-center p-3">
+                                <h4 class="mb-0">{{ policies.count }}</h4>
+                                <p class="small">Active Policies</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-success text-white text-center p-3">
+                                <h4 class="mb-0">{{ claims.filter(status='submitted').count }}</h4>
+                                <p class="small">Pending Claims</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-warning text-white text-center p-3">
+                                <h4 class="mb-0">{{ customer.phone|default:"N/A" }}</h4>
+                                <p class="small">Contact Info</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h5 class="text-primary">Recent Policies</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Policy</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for policy in policies|slice:":5" %}
+                                        <tr>
+                                            <td>{{ policy.policy_number }}</td>
+                                            <td>{{ policy.get_policy_type_display }}</td>
+                                            <td>
+                                                {% if policy.status == 'active' %}
+                                                <span class="status-badge status-active">Active</span>
+                                                {% else %}
+                                                <span class="status-badge status-pending">{{ policy.get_status_display }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr><td colspan="3" class="text-center">No policies found</td></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a href="{% url 'insurance:policy_list' %}" class="btn btn-sm btn-primary">View All</a>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5 class="text-primary">Recent Claims</h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Claim</th>
+                                            <th>Type</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for claim in claims|slice:":5" %}
+                                        <tr>
+                                            <td>{{ claim.claim_number }}</td>
+                                            <td>{{ claim.get_claim_type_display }}</td>
+                                            <td>
+                                                {% if claim.status == 'approved' %}
+                                                <span class="status-badge status-active">Approved</span>
+                                                {% elif claim.status == 'submitted' %}
+                                                <span class="status-badge status-pending">Pending</span>
+                                                {% elif claim.status == 'denied' %}
+                                                <span class="status-badge status-rejected">Denied</span>
+                                                {% else %}
+                                                <span class="status-badge">{{ claim.get_status_display }}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr><td colspan="3" class="text-center">No claims found</td></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a href="{% url 'insurance:claim_list' %}" class="btn btn-sm btn-primary">View All</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

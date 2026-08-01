@@ -1,0 +1,125 @@
+{% extends 'insurance/base.html' %}
+
+{% block title %}AXXA Insurance - Policy Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-file-invoice"></i> Policy Details</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="text-primary">{{ policy.policy_number }}</h4>
+                            <p><strong>Type:</strong> {{ policy.get_policy_type_display }}</p>
+                            <p><strong>Provider:</strong> {{ policy.provider_name }}</p>
+                            <p><strong>Start Date:</strong> {{ policy.start_date }}</p>
+                            <p><strong>End Date:</strong> {{ policy.end_date }}</p>
+                            <p><strong>Status:</strong> 
+                                {% if policy.status == 'active' %}
+                                <span class="status-badge status-active">{{ policy.get_status_display }}</span>
+                                {% else %}
+                                <span class="status-badge">{{ policy.get_status_display }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-primary">Financial Summary</h4>
+                            <p><strong>Premium Amount:</strong> ${{ policy.premium_amount }}</p>
+                            <p><strong>Coverage Amount:</strong> ${{ policy.coverage_amount }}</p>
+                            {% if policy.pending_amount %}
+                            <p><strong>Pending Amount:</strong> ${{ policy.pending_amount }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <h5 class="text-primary">Policy Documents</h5>
+                            {% if policy.documents.all %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Document</th>
+                                            <th>Uploaded</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for doc in policy.documents.all %}
+                                        <tr>
+                                            <td>{{ doc.document_type }}</td>
+                                            <td>{{ doc.uploaded_at }}</td>
+                                            <td>
+                                                <a href="{{ doc.file.url }}" class="btn btn-sm btn-outline-primary" download>Download</a>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr><td colspan="3" class="text-center">No documents uploaded</td></tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p>No documents uploaded for this policy.</p>
+                            {% endif %}
+                            
+                            <h5 class="text-primary mt-4">Claims for This Policy</h5>
+                            {% if claims %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Claim Number</th>
+                                            <th>Type</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Submitted</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for claim in claims %}
+                                        <tr>
+                                            <td>{{ claim.claim_number }}</td>
+                                            <td>{{ claim.get_claim_type_display }}</td>
+                                            <td>${{ claim.claim_amount }}</td>
+                                            <td>
+                                                {% if claim.status == 'approved' %}
+                                                <span class="status-badge status-active">{{ claim.get_status_display }}</span>
+                                                {% elif claim.status == 'submitted' %}
+                                                <span class="status-badge status-pending">{{ claim.get_status_display }}</span>
+                                                {% elif claim.status == 'denied' %}
+                                                <span class="status-badge status-rejected">{{ claim.get_status_display }}</span>
+                                                {% else %}
+                                                <span class="status-badge">{{ claim.get_status_display }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ claim.submitted_at }}</td>
+                                            <td>
+                                                <a href="{% url 'insurance:claim_detail' claim.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <p>No claims filed for this policy.</p>
+                            {% endif %}
+                            
+                            {% if policy.status == 'active' %}
+                            <a href="{% url 'insurance:create_claim' policy.pk %}" class="btn btn-primary mt-3">File a Claim</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

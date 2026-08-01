@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center mb-5">
+        <h1 class="display-4 fw-bold mb-4">Validate Your GenAI & Agentic AI Knowledge</h1>
+        <p class="lead mb-4">Earn a professional certification that demonstrates your expertise in Generative AI and AI Agents</p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            {% if user %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-4">Go to Dashboard</a>
+            <a href="{{ url_for('start_quiz') }}" class="btn btn-outline-primary btn-lg px-4">Start Quiz</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-4">Get Certified</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row" id="features">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-brain fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Comprehensive Coverage</h5>
+                <p class="card-text">Questions covering GENAI fundamentals, LLMs, prompting, and advanced Agentic AI concepts</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-certificate fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Professional Certification</h5>
+                <p class="card-text">Earn a verifiable certificate that you can share on LinkedIn and other professional platforms</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">Progress Tracking</h5>
+                <p class="card-text">Track your learning journey with complete history of all quiz attempts and performance</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5" id="about">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-body p-5">
+                <h3 class="card-title text-center mb-4">About CertifyAI-Pro</h3>
+                <p class="card-text lead text-center">CertifyAI-Pro is the leading platform for validating your knowledge in Generative AI and Agentic AI technologies. Our certification program is designed to help professionals demonstrate their expertise in these cutting-edge fields.</p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>What is GENAI?</h5>
+                        <p class="small">Generative AI (GENAI) refers to AI systems that can create new content, including text, images, audio, and code. These models learn patterns from vast datasets and generate novel outputs.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>What are AI Agents?</h5>
+                        <p class="small">AI Agents are intelligent systems that can perceive their environment, make decisions, and take actions autonomously to achieve specific goals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

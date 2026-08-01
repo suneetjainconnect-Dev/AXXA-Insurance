@@ -1,0 +1,68 @@
+{% extends 'insurance/base.html' %}
+
+{% block title %}AXXA Insurance - My Claims{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-clipboard-list"></i> My Claims</h2>
+                </div>
+                <div class="card-body">
+                    <form method="GET" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="q" value="{{ query }}" placeholder="Search claims...">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </form>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Claim Number</th>
+                                    <th>Policy</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Submitted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for claim in claims %}
+                                <tr>
+                                    <td>{{ claim.claim_number }}</td>
+                                    <td>{{ claim.policy.policy_number }}</td>
+                                    <td>{{ claim.get_claim_type_display }}</td>
+                                    <td>${{ claim.claim_amount }}</td>
+                                    <td>
+                                        {% if claim.status == 'approved' %}
+                                        <span class="status-badge status-active">{{ claim.get_status_display }}</span>
+                                        {% elif claim.status == 'submitted' %}
+                                        <span class="status-badge status-pending">{{ claim.get_status_display }}</span>
+                                        {% elif claim.status == 'denied' %}
+                                        <span class="status-badge status-rejected">{{ claim.get_status_display }}</span>
+                                        {% else %}
+                                        <span class="status-badge">{{ claim.get_status_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ claim.submitted_at }}</td>
+                                    <td>
+                                        <a href="{% url 'insurance:claim_detail' claim.pk %}" class="btn btn-sm btn-primary">View</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="7" class="text-center">No claims found</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

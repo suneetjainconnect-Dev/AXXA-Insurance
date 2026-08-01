@@ -1,0 +1,116 @@
+================================================================================
+CERTIFYAI-PRO - HOW TO START
+================================================================================
+
+Your GenAI & Agentic AI Certification Platform is ready!
+
+PROJECT LOCATION:
+c:\Users\i4usu\OneDrive\Desktop\Project4\genai_certify
+
+================================================================================
+STEP 1: GET GOOGLE OAUTH CREDENTIALS (REQUIRED)
+================================================================================
+
+1. Go to https://console.cloud.google.com/
+2. Create a new project (or use existing)
+3. Go to "APIs & Services" > "Credentials"
+4. Click "Create Credentials" > "OAuth client ID"
+5. Configure consent screen first if prompted
+6. Select "Web application"
+7. Add authorized redirect URI: http://localhost:5000/google-callback
+8. Click "Create"
+9. Copy the Client ID and Client Secret
+
+================================================================================
+STEP 2: SET YOUR OAUTH CREDENTIALS
+================================================================================
+
+Edit the file: app.py
+
+Find these lines (around line 33-34):
+    GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', 'your-google-client-id')
+    GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', 'your-google-client-secret')
+
+Replace 'your-google-client-id' with your actual Client ID
+Replace 'your-google-client-secret' with your actual Client Secret
+
+OR set environment variables:
+
+Windows PowerShell:
+  $env:GOOGLE_CLIENT_ID="your-client-id-here"
+  $env:GOOGLE_CLIENT_SECRET="your-client-secret-here"
+
+Windows CMD:
+  set GOOGLE_CLIENT_ID=your-client-id-here
+  set GOOGLE_CLIENT_SECRET=your-client-secret-here
+
+================================================================================
+STEP 3: START THE APPLICATION
+================================================================================
+
+Option A - Using the batch file (Easiest):
+  Double-click: start.bat
+
+Option B - Using Python:
+  cd c:\Users\i4usu\OneDrive\Desktop\Project4\genai_certify
+  python app.py
+
+================================================================================
+STEP 4: ACCESS YOUR APPLICATION
+================================================================================
+
+Open your browser and go to:
+http://localhost:5000
+
+================================================================================
+FEATURES AVAILABLE:
+================================================================================
+
+✓ Google OAuth Login
+✓ 62 GENAI & Agentic AI Questions
+✓ Random 15-question quizzes (12 easy + 3 hard)
+✓ 60% passing score for certification
+✓ Professional certificate generation
+✓ PDF download capability
+✓ LinkedIn sharing functionality
+✓ User history tracking
+✓ SQLite database (no setup required)
+
+================================================================================
+TESTING WITHOUT GOOGLE LOGIN (OPTIONAL)
+================================================================================
+
+The app requires Google OAuth for production use.
+
+For testing without OAuth, temporarily comment out the login_required
+decorator in app.py around line 176:
+
+# @app.route('/dashboard')
+# @login_required
+# def dashboard():
+
+This will allow you to test the quiz flow, but user data won't persist.
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "Google login failed"
+Solution: Check your OAuth credentials are correct
+
+Problem: "Module not found"
+Solution: Run: pip install -r requirements.txt
+
+Problem: "Address already in use"
+Solution: Change PORT in config.py or stop other services on port 5000
+
+Problem: "Database locked"
+Solution: Close all instances of the app and restart
+
+================================================================================
+SUPPORT
+================================================================================
+
+For help, check the README.md file or review the code comments.
+
+================================================================================

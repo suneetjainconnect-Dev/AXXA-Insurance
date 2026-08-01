@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="mb-0">Question {{ question_index + 1 }} of {{ total_questions }}</h5>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <span class="badge bg-{{ question['difficulty']|replace('easy','success')|replace('medium','warning')|replace('hard','danger') }}">
+                            {{ question['difficulty']|upper }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <h4 class="question-text">{{ question['question'] }}</h4>
+                </div>
+
+                <form method="POST">
+                    <div class="list-group">
+                        {% for i in range(1, 5) %}
+                        <label class="list-group-item list-group-item-action">
+                            <input type="radio" name="answer" value="{{ i }}" class="form-check-input me-2">
+                            {{ question['option' + i|string] }}
+                        </label>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        {% if question_index > 0 %}
+                        <a href="{{ url_for('quiz_question', question_index=question_index - 1) }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Previous
+                        </a>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary">
+                            {% if question_index < total_questions - 1 %}
+                            Next <i class="fas fa-arrow-right ms-2"></i>
+                            {% else %}
+                            Submit Quiz <i class="fas fa-check ms-2"></i>
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-select radio button when clicking on label
+    document.querySelectorAll('.list-group-item').forEach(label => {
+        label.addEventListener('click', function(e) {
+            if (e.target !== this) return;
+            const radio = this.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        });
+    });
+</script>
+{% endblock %}

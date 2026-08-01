@@ -1,0 +1,73 @@
+{% extends 'insurance/base.html' %}
+
+{% block title %}AXXA Insurance - File a Claim{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="fas fa-file-medical-alt"></i> File a Claim for {{ policy.policy_number }}</h2>
+                </div>
+                <div class="card-body">
+                    <p class="lead">Please provide details about your claim.</p>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_claim_type" class="form-label">Claim Type</label>
+                            <select class="form-select" id="id_claim_type" name="claim_type" required>
+                                <option value="">Select Claim Type</option>
+                                <option value="health">Health Claim</option>
+                                <option value="life">Life Claim</option>
+                                <option value="motor">Motor Claim</option>
+                                <option value="home">Home Claim</option>
+                                <option value="travel">Travel Claim</option>
+                                <option value="business">Business Claim</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label">Description of Incident</label>
+                            <textarea class="form-control" id="id_description" name="description" rows="4" required>{{ form.description.value|default:'' }}</textarea>
+                            <div class="form-text">Please provide detailed information about the incident</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_incident_date" class="form-label">Incident Date</label>
+                                    <input type="date" class="form-control" id="id_incident_date" name="incident_date" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_claim_amount" class="form-label">Claim Amount ($)</label>
+                                    <input type="number" class="form-control" id="id_claim_amount" name="claim_amount" min="1" step="0.01" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        <button type="submit" class="btn btn-primary w-100">Submit Claim</button>
+                        <a href="{% url 'insurance:policy_detail' policy.pk %}" class="btn btn-secondary w-100 mt-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
