@@ -243,12 +243,7 @@
                                 <li><a class="dropdown-item" href="{% url 'insurance:dashboard' %}">Dashboard</a></li>
                                 <li><a class="dropdown-item" href="{% url 'insurance:profile' %}">Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <form class="dropdown-item" action="{% url 'logout' %}" method="post">
-                                        {% csrf_token %}
-                                        <button type="submit" class="btn btn-link text-decoration-none" style="border: none; background: none;">Logout</button>
-                                    </form>
-                                </li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                             </ul>
                         </li>
                     {% else %}
